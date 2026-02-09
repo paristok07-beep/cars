@@ -1,0 +1,341 @@
+\<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Διάφορα Αμάξια</title>
+
+<style>
+:root{
+  --bg1:#0a0f1f; --bg2:#040717;
+  --txt:#eef3ff; --muted:#b9c2ff;
+  --card:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.14);
+  --accent:#6aa8ff; --accent2:#b36bff;
+  --shadow:0 20px 50px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  color:var(--txt);
+  background:
+    radial-gradient(800px 500px at 10% 10%, rgba(106,168,255,.25), transparent 60%),
+    radial-gradient(800px 500px at 90% 20%, rgba(179,107,255,.22), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+header{
+  position:sticky;top:0;z-index:10;
+  backdrop-filter:blur(14px);
+  background:rgba(5,8,25,.6);
+  border-bottom:1px solid var(--border);
+}
+.wrap{max-width:1200px;margin:auto;padding:16px}
+nav{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{
+  width:38px;height:38px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 10px 30px rgba(106,168,255,.4)
+}
+.btn{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.06);
+  color:var(--txt);
+  padding:10px 14px;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:700
+}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:14px;margin-top:20px
+}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.2s
+}
+.card:hover{transform:translateY(-3px)}
+.thumb{
+  height:170px;
+  background-size:cover;
+  background-position:center;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  padding:10px
+}
+.badge{
+  background:rgba(0,0,0,.45);
+  padding:6px 10px;border-radius:999px;
+  font-weight:800
+}
+.body{padding:14px}
+.body h4{margin:0 0 6px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{
+  font-size:12px;padding:5px 9px;border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.05)
+}
+.details{display:none}
+.details.show{display:block}
+.bigimg{
+  height:320px;background-size:cover;
+  background-position:center;border-radius:18px;
+  margin:14px 0
+}
+.specs{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px
+}
+@media(max-width:700px){.specs{grid-template-columns:1fr}}
+.spec{
+  background:rgba(0,0,0,.25);
+  border:1px solid var(--border);
+  border-radius:14px;padding:10px
+}
+.footer{text-align:center;margin:30px 0;color:#9aa3ff}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <b>Διάφορα Αμάξια</b><br>
+          <small style="color:#b9c2ff">Car showcase</small>
+        </div>
+      </div>
+      <button class="btn primary" onclick="goHome()">Αρχική</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="home">
+  <h2>Επίλεξε αμάξι</h2>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section class="details" id="details">
+  <button class="btn" onclick="goHome()">⬅ Πίσω</button>
+  <h2 id="dTitle"></h2>
+  <p id="dSub" style="color:#b9c2ff"></p>
+  <div class="bigimg" id="dImg"></div>
+  <div class="specs" id="dSpecs"></div>
+</section>
+
+<div class="footer">© Διάφορα Αμάξια</div>
+</main>
+
+<script>
+const cars=[
+{
+ n:"Mercedes CLS 63 AMG (C218)",
+ img:"cls63.jpg",
+ hp:585,
+ tags:["AMG","V8","AWD"],
+ spec:{
+  "Κινητήρας":"5.5L V8 biturbo (M157)",
+  "Ιπποδύναμη":"525–585 hp",
+  "Ροπή":"800 Nm",
+  "0–100 km/h":"~3.6 s",
+  "Κίνηση":"4MATIC",
+  "Κιβώτιο":"AMG SPEEDSHIFT MCT"
+ }
+},
+{
+ n:"Dodge Challenger SRT Demon",
+ img:"demon.webp",
+ hp:840,
+ tags:["V8","Drag","RWD"],
+ spec:{
+  "Κινητήρας":"6.2L V8 Supercharged",
+  "Ιπποδύναμη":"840 hp",
+  "0–60 mph":"2.3 s",
+  "1/4 mile":"9.65 s",
+  "Χαρακτήρας":"Drag car"
+ }
+},
+{
+ n:"Mercedes-AMG C 63 S E Performance",
+ img:"c63se.webp",
+ hp:680,
+ tags:["Hybrid","AMG","AWD"],
+ spec:{
+  "Σύστημα":"Plug-in Hybrid",
+  "Συνολική Ισχύς":"680 hp",
+  "Ροπή":"1.020 Nm",
+  "0–100 km/h":"3.4 s",
+  "Κίνηση":"4MATIC+"
+ }
+},
+{
+ n:"Audi RS6 Avant",
+ img:"rs6.jpg",
+ hp:600,
+ tags:["V8","AWD","Wagon"],
+ spec:{
+  "Κινητήρας":"4.0L V8 Twin-Turbo",
+  "Ιπποδύναμη":"600 hp",
+  "0–100 km/h":"3.6 s",
+  "Κίνηση":"quattro"
+ }
+},
+{
+ n:"BMW M5 CS",
+ img:"m5cs.jpg",
+ hp:635,
+ tags:["V8","AWD","CS"],
+ spec:{
+  "Κινητήρας":"4.4L V8 Twin-Turbo",
+  "Ιπποδύναμη":"635 hp",
+  "0–100 km/h":"3.0 s",
+  "Τελική":"305 km/h"
+ }
+},
+{
+ n:"Lamborghini Huracán",
+ img:"huracan.jpg",
+ hp:640,
+ tags:["V10","Supercar"],
+ spec:{
+  "Κινητήρας":"5.2L V10 ατμοσφαιρικός",
+  "Ιπποδύναμη":"640 hp",
+  "0–100 km/h":"2.9 s",
+  "Τελική":">325 km/h"
+ }
+},
+{
+ n:"Nissan GT-R R35",
+ img:"gtr.jpg",
+ hp:565,
+ tags:["JDM","AWD"],
+ spec:{
+  "Κινητήρας":"3.8L V6 Twin-Turbo",
+  "Ιπποδύναμη":"565 hp",
+  "0–100 km/h":"~2.9 s",
+  "Κίνηση":"AWD"
+ }
+},
+{
+ n:"Ferrari 488 GTB",
+ img:"ferrari488.jpg",
+ hp:670,
+ tags:["V8","RWD","Supercar"],
+ spec:{
+  "Κινητήρας":"3.9L V8 Twin-Turbo",
+  "Ιπποδύναμη":"670 hp",
+  "0–100 km/h":"3.0 s",
+  "Τελική":"330 km/h"
+ }
+},
+{
+ n:"McLaren 720S",
+ img:"mclaren720s.jpg",
+ hp:720,
+ tags:["Supercar","RWD"],
+ spec:{
+  "Κινητήρας":"4.0L V8 Twin-Turbo",
+  "Ιπποδύναμη":"720 hp",
+  "0–100 km/h":"2.8 s",
+  "Τελική":"341 km/h"
+ }
+},
+{
+ n:"Porsche 911 Turbo S",
+ img:"porsche911.jpg",
+ hp:711,
+ tags:["AWD","Turbo"],
+ spec:{
+  "Ιπποδύναμη":"711 hp",
+  "0–100 km/h":"2.5 s",
+  "Τελική":"330 km/h",
+  "Κιβώτιο":"PDK"
+ }
+},
+{
+ n:"Cadillac Escalade-V",
+ img:"escalade.jpg",
+ hp:682,
+ tags:["SUV","V8"],
+ spec:{
+  "Κινητήρας":"6.2L V8 Supercharged",
+  "Ιπποδύναμη":"682 hp",
+  "0–60 mph":"4.4 s",
+  "Κατηγορία":"Performance SUV"
+ }
+},
+{
+ n:"Tesla Model S Plaid",
+ img:"tesla-plaid.webp",
+ hp:1020,
+ tags:["EV","AWD"],
+ spec:{
+  "Κινητήρες":"Tri-Motor",
+  "Ιπποδύναμη":"1.020 hp",
+  "0–100 km/h":"2.1 s",
+  "Αυτονομία":"~600 km"
+ }
+},
+{
+ n:"Toyota GR Supra 3.0",
+ img:"supra.avif",
+ hp:387,
+ tags:["JDM","RWD"],
+ spec:{
+  "Κινητήρας":"3.0L I6 Turbo",
+  "Ιπποδύναμη":"387 hp",
+  "0–100 km/h":"~4.1 s",
+  "Κιβώτιο":"6MT / 8AT"
+ }
+}
+];
+
+const grid=document.getElementById("grid");
+const details=document.getElementById("details");
+const home=document.getElementById("home");
+
+function render(){
+ grid.innerHTML="";
+ cars.forEach(c=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <div class="thumb" style="background-image:url('${c.img}')">
+    <span class="badge">${c.hp} hp</span>
+   </div>
+   <div class="body">
+    <h4>${c.n}</h4>
+    <div class="pills">${c.tags.map(t=>`<span class="pill">${t}</span>`).join("")}</div>
+   </div>`;
+  d.onclick=()=>openCar(c);
+  grid.appendChild(d);
+ });
+}
+function openCar(c){
+ home.style.display="none";
+ details.classList.add("show");
+ dTitle.textContent=c.n;
+ dSub.textContent=c.hp+" hp";
+ dImg.style.backgroundImage=`url('${c.img}')`;
+ dSpecs.innerHTML="";
+ Object.entries(c.spec).forEach(([k,v])=>{
+  dSpecs.innerHTML+=`<div class="spec"><b>${k}</b><br>${v}</div>`;
+ });
+}
+function goHome(){
+ details.classList.remove("show");
+ home.style.display="block";
+}
+render();
+</script>
+</body>
+</html>
